@@ -1,2 +1,3 @@
-# DevOpsGPT
+# devopsgpt
+
 ops without dev
