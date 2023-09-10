@@ -195,7 +195,7 @@ async def update_doc(
             kb.update_doc(kb_file, not_refresh_vs_cache=not_refresh_vs_cache)
             return BaseResponse(code=200, msg=f"成功更新文件 {kb_file.filename}")
     except Exception as e:
-        print(e)
+        logger.error(traceback.format_exc())
         return BaseResponse(code=500, msg=f"{kb_file.filename} 文件更新失败，错误信息是：{e}")
 
     return BaseResponse(code=500, msg=f"{kb_file.filename} 文件更新失败")

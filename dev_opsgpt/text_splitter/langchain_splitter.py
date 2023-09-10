@@ -52,6 +52,8 @@ class LCTextSplitter:
                     chunk_overlap=OVERLAP_SIZE,
                 )
                 self.text_splitter_name = "SpacyTextSplitter"
+            elif self.document_loader_name in ["JSONLoader", "JSONLLoader"]:
+                text_splitter = None
             else:
                 text_splitter_module = importlib.import_module('langchain.text_splitter')
                 TextSplitter = getattr(text_splitter_module, self.text_splitter_name)

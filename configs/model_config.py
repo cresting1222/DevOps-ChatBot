@@ -111,7 +111,11 @@ KB_ROOT_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 # nltk 模型存储路径
 NLTK_DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "nltk_data")
 
-for _path in [LOG_PATH, SOURCE_PATH, KB_ROOT_PATH, NLTK_DATA_PATH]:
+# 代码存储路径
+JUPYTER_WORK_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "juptyer_work")
+
+
+for _path in [LOG_PATH, SOURCE_PATH, KB_ROOT_PATH, NLTK_DATA_PATH, JUPYTER_WORK_PATH]:
     if not os.path.exists(_path):
         os.mkdir(_path)
 

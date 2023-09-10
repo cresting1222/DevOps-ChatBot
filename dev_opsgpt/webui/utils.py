@@ -9,6 +9,7 @@ import contextlib
 import json
 import nltk
 import traceback
+from loguru import logger
 
 from configs.model_config import (
     EMBEDDING_MODEL,
@@ -25,6 +26,7 @@ from configs.model_config import (
 from dev_opsgpt.utils.server_utils import run_async, iter_over_async
 from dev_opsgpt.service.kb_api import *
 from dev_opsgpt.chat import LLMChat, SearchChat, KnowledgeChat
+from dev_opsgpt.sandbox import PyCodeBox, CodeBoxResponse
 
 nltk.data.path = [NLTK_DATA_PATH] + nltk.data.path
 
@@ -61,6 +63,17 @@ class ApiRequest:
         self.llmChat = LLMChat()
         self.searchChat = SearchChat()
         self.knowledgeChat = KnowledgeChat()
+        self.codebox = PyCodeBox(
+            remote_url="http://localhost:5050",
+            remote_ip="http://localhost",
+            remote_port="5050",
+            token="mytoken",
+            do_code_exe=True,
+            do_remote=True
+            )
+
+    def codebox_chat(self, text: str, file_path: str = None, do_code_exe: bool = None) -> CodeBoxResponse:
+        return self.codebox.chat(text, file_path, do_code_exe=do_code_exe)
 
     def _parse_url(self, url: str) -> str:
         if (not url.startswith("http")

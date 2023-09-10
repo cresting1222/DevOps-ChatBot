@@ -42,6 +42,7 @@ def load_vector_store(
         tick: int = 0,  # tick will be changed by upload_doc etc. and make cache refreshed.
 ):
     print(f"loading vector store in '{knowledge_base_name}'.")
+    logger.info("load embedmodel: {}".format(embed_model))
     vs_path = get_vs_path(knowledge_base_name)
     if embeddings is None:
         embeddings = load_embeddings(embed_model, embed_device)

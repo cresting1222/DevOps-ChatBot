@@ -68,6 +68,16 @@ FSCHAT_CONTROLLER = {
 }
 
 
+# sandbox api server
+CONTAINER_NAME = "devopsgpt_default"
+IMAGE_NAME = "devopsgpt:pypy38"
+SANDBOX_SERVER = {
+    "host": DEFAULT_BIND_HOST,
+    "port": 5050,
+    "url": DEFAULT_BIND_HOST + ":" + "5050"
+}
+
+
 # 以下不要更改
 def fschat_controller_address() -> str:
     host = FSCHAT_CONTROLLER["host"]

@@ -1,23 +1,35 @@
 import os
-from langchain.document_loaders import CSVLoader, PyPDFLoader, UnstructuredFileLoader
+from langchain.document_loaders import CSVLoader, PyPDFLoader, UnstructuredFileLoader, TextLoader, PythonLoader
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+
+from dev_opsgpt.document_loaders import JSONLLoader, JSONLoader
 from configs.model_config import (
     embedding_model_dict,
     KB_ROOT_PATH,
 )
+from loguru import logger
 
 
 LOADERNAME2LOADER_DICT = {
     "UnstructuredFileLoader": UnstructuredFileLoader,
     "CSVLoader": CSVLoader,
-    "PyPDFLoader": PyPDFLoader
+    "PyPDFLoader": PyPDFLoader,
+    "TextLoader": TextLoader,
+    "PythonLoader": PythonLoader,
+    "JSONLoader": JSONLoader,
+    "JSONLLoader": JSONLLoader
 }
-LOADER2EXT_DICT = {"UnstructuredFileLoader": ['.eml', '.html', '.json', '.md', '.msg', '.rst',
-                                          '.rtf', '.txt', '.xml',
+
+LOADER2EXT_DICT = {"UnstructuredFileLoader": ['.eml', '.html', '.md', '.msg', '.rst',
+                                          '.rtf', '.xml',
                                           '.doc', '.docx', '.epub', '.odt', 
                                           '.ppt', '.pptx', '.tsv'],
                "CSVLoader": [".csv"],
                "PyPDFLoader": [".pdf"],
+                "TextLoader": ['.txt'],
+                "PythonLoader": ['.py'],
+                "JSONLoader": ['.json'],
+                "JSONLLoader": ['.jsonl'],
                }
 
 EXT2LOADER_DICT = {ext: LOADERNAME2LOADER_DICT[k] for k, exts in LOADER2EXT_DICT.items() for ext in exts}

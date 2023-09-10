@@ -4,11 +4,14 @@ from typing import List, Dict
 from datetime import datetime
 
 from .utils import *
+from dev_opsgpt.utils import *
 from dev_opsgpt.chat.search_chat import SEARCH_ENGINES
 
 chat_box = ChatBox(
     assistant_avatar="../sources/imgs/chatchat_icon_blue_square_v2.png"
 )
+
+GLOBAL_EXE_CODE_TEXT = ""
 
 
 def get_messages_history(history_len: int) -> List[Dict]:
@@ -34,6 +37,7 @@ def get_messages_history(history_len: int) -> List[Dict]:
 
 
 def dialogue_page(api: ApiRequest):
+    global GLOBAL_EXE_CODE_TEXT
     chat_box.init_session()
 
     with st.sidebar:
@@ -81,11 +85,15 @@ def dialogue_page(api: ApiRequest):
                 search_engine = st.selectbox("请选择搜索引擎", SEARCH_ENGINES.keys(), 0)
                 se_top_k = st.number_input("匹配搜索结果条数：", 1, 20, 3)
 
+        code_interpreter_on = st.toggle("开启代码解释器")
+        code_exec_on = st.toggle("自动执行代码")
     # Display chat messages from history on app rerun
 
     chat_box.output_messages()
 
     chat_input_placeholder = "请输入对话内容，换行请使用Ctrl+Enter "
+    code_text = "" or GLOBAL_EXE_CODE_TEXT
+    codebox_res = None
 
     if prompt := st.chat_input(chat_input_placeholder, key="prompt"):
         history = get_messages_history(history_len)
@@ -100,7 +108,14 @@ def dialogue_page(api: ApiRequest):
                     break
                 text += t["answer"]
                 chat_box.update_msg(text)
-            chat_box.update_msg(text, streaming=True)  # 更新最终的字符串，去除光标
+            logger.debug(f"text: {text}")
+            chat_box.update_msg(text, streaming=False)  # 更新最终的字符串，去除光标
+            # 判断是否存在代码, 并提高编辑功能，执行功能
+            code_text = api.codebox.decode_code_from_text(text)
+            GLOBAL_EXE_CODE_TEXT = code_text
+            if code_text and code_exec_on:
+                codebox_res = api.code_box("```"+code_text+"```", do_code_exe=True)
+
         elif dialogue_mode == "知识库问答":
             history = get_messages_history(history_len)
             chat_box.ai_say([
@@ -114,7 +129,12 @@ def dialogue_page(api: ApiRequest):
                 text += d["answer"]
                 chat_box.update_msg(text, 0)
                 chat_box.update_msg("\n\n".join(d["docs"]), 1, streaming=True)
-            chat_box.update_msg(text, 0, streaming=True)
+            chat_box.update_msg(text, streaming=False)  # 更新最终的字符串，去除光标
+            # 判断是否存在代码, 并提高编辑功能，执行功能
+            code_text = api.codebox.decode_code_from_text(text)
+            GLOBAL_EXE_CODE_TEXT = code_text
+            if code_text and code_exec_on:
+                codebox_res = api.code_box("```"+code_text+"```", do_code_exe=True)
         elif dialogue_mode == "搜索引擎问答":
             chat_box.ai_say([
                 f"正在执行 `{search_engine}` 搜索...",
@@ -128,6 +148,41 @@ def dialogue_page(api: ApiRequest):
                 chat_box.update_msg(text, 0)
                 chat_box.update_msg("\n\n".join(d["docs"]), 1, streaming=True)
             chat_box.update_msg(text, 0, streaming=True)
+
+    if code_interpreter_on:
+        with st.expander("代码编辑执行器", False):
+            code_part = st.text_area("代码片段", code_text, key="code_text")
+            cols = st.columns(2)
+            if cols[0].button(
+                "修改对话",
+                use_container_width=True,
+            ):
+                code_text = code_part
+                GLOBAL_EXE_CODE_TEXT = code_text
+                st.toast("修改对话成功")
+
+            if cols[1].button(
+                "执行代码",
+                use_container_width=True
+            ):
+                if code_text:
+                    codebox_res = api.codebox_chat("```"+code_text+"```", do_code_exe=True)
+                    st.toast("正在执行代码")
+                else:
+                    st.toast("code 不能为空")
+
+    #TODO 这段信息会被记录到history里
+    if codebox_res is not None and codebox_res.code_exe_status == 200:
+        st.toast(f"codebox_chajt {codebox_res}")
+        chat_box.ai_say(Markdown(code_text, in_expander=True, title="code interpreter", unsafe_allow_html=True), )
+        if codebox_res.code_exe_type == "image/png":
+            base_text = f"```\n{code_text}\n```\n\n"
+            img_html = "<img src='data:image/png;base64,{}' class='img-fluid'>".format(
+                codebox_res.code_exe_response
+            )
+            chat_box.update_msg(base_text + img_html, streaming=False)
+        else:
+            chat_box.update_msg('```\n'+code_text+'\n```'+"\n\n"+'```\n'+codebox_res.code_exe_response+'\n```', streaming=False)
 
     now = datetime.now()
     with st.sidebar:

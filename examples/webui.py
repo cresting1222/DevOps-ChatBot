@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     if not chat_box.chat_inited:
         st.toast(
-            f"欢迎使用 [`Langchain-Chatchat`](https://github.com/lightislost/devopsgpt) ! \n\n"
+            f"欢迎使用 [`DevOpsGPT-Chat`](https://github.com/lightislost/devopsgpt) ! \n\n"
             f"当前使用模型`{LLM_MODEL}`, 您可以开始提问了."
         )
 
