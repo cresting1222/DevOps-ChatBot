@@ -114,7 +114,7 @@ def dialogue_page(api: ApiRequest):
             code_text = api.codebox.decode_code_from_text(text)
             GLOBAL_EXE_CODE_TEXT = code_text
             if code_text and code_exec_on:
-                codebox_res = api.code_box("```"+code_text+"```", do_code_exe=True)
+                codebox_res = api.codebox_chat("```"+code_text+"```", do_code_exe=True)
 
         elif dialogue_mode == "知识库问答":
             history = get_messages_history(history_len)
@@ -128,13 +128,13 @@ def dialogue_page(api: ApiRequest):
                     st.error(error_msg)
                 text += d["answer"]
                 chat_box.update_msg(text, 0)
-                chat_box.update_msg("\n\n".join(d["docs"]), 1, streaming=True)
-            chat_box.update_msg(text, streaming=False)  # 更新最终的字符串，去除光标
+                chat_box.update_msg("知识库匹配结果: \n\n".join(d["docs"]), 1, streaming=False)
+            chat_box.update_msg(text, 0, streaming=False)  # 更新最终的字符串，去除光标
             # 判断是否存在代码, 并提高编辑功能，执行功能
             code_text = api.codebox.decode_code_from_text(text)
             GLOBAL_EXE_CODE_TEXT = code_text
             if code_text and code_exec_on:
-                codebox_res = api.code_box("```"+code_text+"```", do_code_exe=True)
+                codebox_res = api.codebox_chat("```"+code_text+"```", do_code_exe=True)
         elif dialogue_mode == "搜索引擎问答":
             chat_box.ai_say([
                 f"正在执行 `{search_engine}` 搜索...",
