@@ -18,7 +18,7 @@ class PyCodeBox(BaseBox):
 
     enter_status: bool = False
 
-    def __iinit__(
+    def __init__(
             self, 
             remote_url: str = "",
             remote_ip: str = SANDBOX_SERVER["host"],
@@ -36,6 +36,7 @@ class PyCodeBox(BaseBox):
         code_blocks = re.findall(pattern, text, re.DOTALL)
         code_text: str = "\n".join([block.strip('`') for block in code_blocks])
         code_text = code_text[6:] if code_text.startswith("python") else code_text
+        code_text = code_text.replace("python\n", "")
         return code_text
     
     def run(
@@ -48,7 +49,7 @@ class PyCodeBox(BaseBox):
                 code_exe_response="Code or file_path must be specifieds!",
                 code_text=code_text,
                 code_exe_type="text",
-                codex_exe_status=502,
+                code_exe_status=502,
                 do_code_exe=self.do_code_exe,
             )
         
@@ -57,7 +58,7 @@ class PyCodeBox(BaseBox):
                 code_exe_response="Can only specify code or the file to read_from!",
                 code_text=code_text,
                 code_exe_type="text",
-                codex_exe_status=502,
+                code_exe_status=502,
                 do_code_exe=self.do_code_exe,
             )
         
@@ -127,7 +128,7 @@ class PyCodeBox(BaseBox):
                         code_exe_type="image/png",
                         code_text=code_text,
                         code_exe_response=received_msg["content"]["data"]["image/png"],
-                        codex_exe_status=200,
+                        code_exe_status=200,
                         do_code_exe=self.do_code_exe
                     )
                 if "text/plain" in received_msg["content"]["data"]:
@@ -135,14 +136,14 @@ class PyCodeBox(BaseBox):
                         code_exe_type="text",
                         code_text=code_text,
                         code_exe_response=received_msg["content"]["data"]["text/plain"],
-                        codex_exe_status=200,
+                        code_exe_status=200,
                         do_code_exe=self.do_code_exe
                     )
                 return CodeBoxResponse(
                         code_exe_type="error",
                         code_text=code_text,
                         code_exe_response=received_msg["content"]["data"]["text/plain"],
-                        codex_exe_status=420,
+                        code_exe_status=420,
                         do_code_exe=self.do_code_exe
                     )
             elif (
@@ -156,7 +157,7 @@ class PyCodeBox(BaseBox):
                         code_exe_type="text",
                         code_text=code_text,
                         code_exe_response=result or "Code run successfully (no output)",
-                        codex_exe_status=200,
+                        code_exe_status=200,
                         do_code_exe=self.do_code_exe
                     )
 
@@ -172,7 +173,7 @@ class PyCodeBox(BaseBox):
                         code_exe_type="error",
                         code_text=code_text,
                         code_exe_response=error,
-                        codex_exe_status=500,
+                        code_exe_status=500,
                         do_code_exe=self.do_code_exe
                     )
 
@@ -246,10 +247,10 @@ class PyCodeBox(BaseBox):
             try:
                 connect_status = self._check_connect()
                 if connect_status:
-                    logger.info("f{self.remote_urr} connection success")
+                    logger.info(f"{self.remote_url} connection success")
                     return True
             except requests.exceptions.ConnectionError:
-                logger.info("f{self.remote_urr} connection fail")
+                logger.info(f"{self.remote_url} connection fail")
             retry_nums -= 1
             time.sleep(5)
         raise BaseException(f"can't connect to {self.remote_url}")
@@ -257,12 +258,12 @@ class PyCodeBox(BaseBox):
     async def _acheck_connect_success(self, retry_nums: int = 5) -> bool:
         while retry_nums > 0:
             try:
-                connect_status = await self._check_connect()
+                connect_status = await self._acheck_connect()
                 if connect_status:
-                    logger.info("f{self.remote_urr} connection success")
+                    logger.info(f"{self.remote_url} connection success")
                     return True
             except requests.exceptions.ConnectionError:
-                logger.info("f{self.remote_urr} connection fail")
+                logger.info(f"{self.remote_url} connection fail")
             retry_nums -= 1
             time.sleep(5)
         raise BaseException(f"can't connect to {self.remote_url}")
@@ -276,7 +277,8 @@ class PyCodeBox(BaseBox):
             self._check_connect_success()
 
             self._get_kernelid()
-            self.wc_url = self.kernel_url.replace("http", "ws") + f"/{self.kernel_id}/channels?=token{self.token}"
+            logger.debug(self.kernel_url.replace("http", "ws") + f"/{self.kernel_id}/channels?token={self.token}")
+            self.wc_url = self.kernel_url.replace("http", "ws") + f"/{self.kernel_id}/channels?token={self.token}"
             headers = {"Authorization": f'Token {self.token}', 'token': self.token}
             self.ws = create_connection(self.wc_url, headers=headers)
         else:
@@ -303,7 +305,8 @@ class PyCodeBox(BaseBox):
             
             self._check_connect_success()
             self._get_kernelid()
-            self.wc_url = self.kernel_url.replace("http", "ws") + f"/{self.kernel_id}/channels?=token{self.token}"
+            logger.debug(self.kernel_url.replace("http", "ws") + f"/{self.kernel_id}/channels?token={self.token}")
+            self.wc_url = self.kernel_url.replace("http", "ws") + f"/{self.kernel_id}/channels?token={self.token}"
             headers = {"Authorization": f'Token {self.token}', 'token': self.token}
             self.ws = create_connection(self.wc_url, headers=headers)
 
@@ -316,7 +319,7 @@ class PyCodeBox(BaseBox):
 
             await self._acheck_connect_success()
             await self._aget_kernelid()
-            self.wc_url = self.kernel_url.replace("http", "ws") + f"/{self.kernel_id}/channels?=token{self.token}"
+            self.wc_url = self.kernel_url.replace("http", "ws") + f"/{self.kernel_id}/channels?token={self.token}"
             headers = {"Authorization": f'Token {self.token}', 'token': self.token}
             self.ws = create_connection(self.wc_url, headers=headers)
         else:
@@ -343,7 +346,7 @@ class PyCodeBox(BaseBox):
             
             await self._acheck_connect_success()
             await self._aget_kernelid()
-            self.wc_url = self.kernel_url.replace("http", "ws") + f"/{self.kernel_id}/channels?=token{self.token}"
+            self.wc_url = self.kernel_url.replace("http", "ws") + f"/{self.kernel_id}/channels?token={self.token}"
             headers = {"Authorization": f'Token {self.token}', 'token': self.token}
             self.ws = create_connection(self.wc_url, headers=headers)
 
