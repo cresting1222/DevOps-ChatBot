@@ -25,6 +25,17 @@ FSCHAT_OPENAI_API = {
     "port": 8888,  # model_config.llm_model_dict中模型配置的api_base_url需要与这里一致。
 }
 
+# sandbox api server
+CONTRAINER_NAME = "devopsgt_default"
+IMAGE_NAME = "devopsgpt:pypy38"
+SANDBOX_SERVER = {
+    "host": DEFAULT_BIND_HOST,
+    "port": 5050,
+    "url": "http://localhost:5050"
+}
+
+
+
 # fastchat model_worker server
 # 这些模型必须是在model_config.llm_model_dict中正确配置的。
 # 在启动startup.py时，可用通过`--model-worker --model-name xxxx`指定模型，不指定则为LLM_MODEL
@@ -65,16 +76,6 @@ FSCHAT_CONTROLLER = {
     "host": DEFAULT_BIND_HOST,
     "port": 20001,
     "dispatch_method": "shortest_queue",
-}
-
-
-# sandbox api server
-CONTAINER_NAME = "devopsgpt_default"
-IMAGE_NAME = "devopsgpt:pypy38"
-SANDBOX_SERVER = {
-    "host": DEFAULT_BIND_HOST,
-    "port": 5050,
-    "url": DEFAULT_BIND_HOST + ":" + "5050"
 }
 
 
