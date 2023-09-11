@@ -63,8 +63,12 @@ class KnowledgeChat(Chat):
 
     def create_task(self, query: str, history: List[History], model):
         '''构建 llm 生成任务'''
+        logger.debug(f"query: {query}, history: {history}")
         chain, context, result = self._process(query, history, model)
-        content = chain({"context": context, "question": query})
+        try:
+            content = chain({"context": context, "question": query})
+        except Exception as e:
+            content = {"text": str(e)}
         return result, content
 
     def create_atask(self, query, history, model, callback: AsyncIteratorCallbackHandler):
