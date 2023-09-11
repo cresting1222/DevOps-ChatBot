@@ -2,17 +2,18 @@ import docker, sys, os, time, requests
 
 from loguru import logger
 
-src_dir = os.path.dir(
+src_dir = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )
 sys.path.append(src_dir)
 
-from configs.server_config import CONTAINER_NAME, SANDBOX_SERVER, IMAGE_NAME
+from configs.server_config import CONTRAINER_NAME, SANDBOX_SERVER, IMAGE_NAME
+
 
 client = docker.from_env()
 
 for i  in client.containers.list(all=True):
-    if i.name == CONTAINER_NAME:
+    if i.name == CONTRAINER_NAME:
         container = i
         container.stop()
         container.remove()
@@ -23,7 +24,8 @@ logger.info("start ot init container & notebook")
 container = client.containers.run(
     image=IMAGE_NAME,
     command="bash",
-    ports={"5050/tcp": SANDBOX_SERVER["prot"]},
+    name=CONTRAINER_NAME,
+    ports={"5050/tcp": SANDBOX_SERVER["port"]},
     stdin_open=True,
     detach=True,
     tty=True,
