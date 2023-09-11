@@ -10,11 +10,11 @@ class CodeBoxResponse(BaseModel):
     code_text: str = ""
     code_exe_response: str = ""
     code_exe_type: str = ""
-    codex_exe_status: int
+    code_exe_status: int
     do_code_exe: bool
 
     def __str__(self,):
-        return f"""status: {self.codex_exe_status}, type: {self.code_exe_type}, response: {self.code_exe_response}"""
+        return f"""status: {self.code_exe_status}, type: {self.code_exe_type}, response: {self.code_exe_response}"""
 
 
 class CodeBoxStatus(BaseModel):
@@ -25,7 +25,7 @@ class BaseBox(ABC):
 
     enter_status = False
 
-    def __iinit__(
+    def __init__(
             self, 
             remote_url: str = "",
             remote_ip: str = SANDBOX_SERVER["host"],
@@ -49,7 +49,7 @@ class BaseBox(ABC):
         do_code_exe = self.do_code_exe if do_code_exe is None else do_code_exe
         if not do_code_exe:
             return CodeBoxResponse(
-                code_exe_response=text, code_text=text, code_exe_type="text", codex_exe_status=200,
+                code_exe_response=text, code_text=text, code_exe_type="text", code_exe_status=200,
                 do_code_exe=do_code_exe
             )
         
@@ -58,7 +58,7 @@ class BaseBox(ABC):
             return self.run(code_text, file_path)
         except Exception as e:
             return CodeBoxResponse(
-                code_exe_response=str(e), code_text=text, code_exe_type="error", codex_exe_status=500,
+                code_exe_response=str(e), code_text=text, code_exe_type="error", code_exe_status=500,
                 do_code_exe=do_code_exe
             )
         
@@ -66,7 +66,7 @@ class BaseBox(ABC):
         do_code_exe = self.do_code_exe if do_code_exe is None else do_code_exe
         if not do_code_exe:
             return CodeBoxResponse(
-                code_exe_response=text, code_text=text, code_exe_type="text", codex_exe_status=200,
+                code_exe_response=text, code_text=text, code_exe_type="text", code_exe_status=200,
                 do_code_exe=do_code_exe
             )
         
@@ -75,7 +75,7 @@ class BaseBox(ABC):
             return await self.arun(code_text, file_path)
         except Exception as e:
             return CodeBoxResponse(
-                code_exe_response=str(e), code_text=text, code_exe_type="error", codex_exe_status=500,
+                code_exe_response=str(e), code_text=text, code_exe_type="error", code_exe_status=500,
                 do_code_exe=do_code_exe
             )
         
