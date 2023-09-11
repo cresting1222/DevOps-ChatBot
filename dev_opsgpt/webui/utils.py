@@ -497,6 +497,7 @@ class ApiRequest:
                 UploadFile(file=temp_file, filename=filename),
                 knowledge_base_name,
                 override,
+                not_refresh_vs_cache
             ))
             return response.dict()
         else:
@@ -556,7 +557,7 @@ class ApiRequest:
             no_remote_api = self.no_remote_api
 
         if no_remote_api:
-            response = run_async(update_doc(knowledge_base_name, file_name))
+            response = run_async(update_doc(knowledge_base_name, file_name, not_refresh_vs_cache))
             return response.dict()
         else:
             response = self.post(
