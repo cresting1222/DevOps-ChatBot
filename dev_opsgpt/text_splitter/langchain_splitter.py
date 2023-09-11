@@ -31,7 +31,10 @@ class LCTextSplitter:
     def file2text(self, ):
         loader = self._load_document()
         text_splitter = self._load_text_splitter()
-        docs = loader.load_and_split(text_splitter)
+        if self.document_loader_name in ["JSONLoader", "JSONLLoader"]:
+            docs = loader.load()
+        else:
+            docs = loader.load_and_split(text_splitter)
         logger.info(docs[0])
         return docs
 
