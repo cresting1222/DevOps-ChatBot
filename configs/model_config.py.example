@@ -112,7 +112,7 @@ KB_ROOT_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 NLTK_DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "nltk_data")
 
 # 代码存储路径
-JUPYTER_WORK_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "juptyer_work")
+JUPYTER_WORK_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "jupyter_work")
 
 
 for _path in [LOG_PATH, SOURCE_PATH, KB_ROOT_PATH, NLTK_DATA_PATH, JUPYTER_WORK_PATH]:
