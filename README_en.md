@@ -137,7 +137,7 @@ comming soon
 
 ```bash
 cd examples
-bash start_webui.py
+bash start_webui.sh
 ```
 
 
