@@ -140,7 +140,7 @@ linux安装相对比较简单，请自行baidu/google相关安装
 默认只启动webui相关服务，未启动fastchat
 ```bash
 cd examples
-bash start_webui.py
+bash start_webui.sh
 ```
 
 
