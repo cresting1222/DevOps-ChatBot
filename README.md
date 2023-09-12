@@ -101,6 +101,9 @@ git lfs clone https://huggingface.co/shibing624/text2vec-base-chinese
 
 - linux docker 安装
 linux安装相对比较简单，请自行baidu/google相关安装
+
+- mac docker 安装
+  - [Docker 从入门到实践](https://yeasy.gitbook.io/docker_practice/install/mac)
 <br>
 
 4、一键启动服务
