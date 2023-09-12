@@ -52,15 +52,15 @@
 
 从下往上简介
 
-● Web Crawl：定期网络文档爬取，保障数据时效性（依赖开源的持续补充）
-● Data Process：针对不同爬取来源的数据，清洗、去重、分类，同时支持私有文档导入
-● Vector Database：结合Text Embedding模型获取文档Embedding并存储（Milvus）
-● Schedule Core：调度核心，负责LLM、Vector Database等的交互调度（Langchain）
-● Prompt Control：面向开发、运维视角，不同问题分类，Prompt背景添加，保障回答的可控性、完备性
-● LLM：默认采用GPT-4，面向私有部署等隐私性场景，提供专有模型
-● Text Embedding：默认采用OpenAI Text Embedding模型，面向私有部署等隐私性场景，提供专有模型
-● SandBox：针对生成的结果，比如代码，用户不确定真假，提供环境交互验证（FaaS），支持修改
-● Connector：后续和周边平台通过API打通，比如监控等平台，方便交互以及操作（重启）
+- Web Crawl：定期网络文档爬取，保障数据时效性（依赖开源的持续补充）
+- Data Process：针对不同爬取来源的数据，清洗、去重、分类，同时支持私有文档导入
+- Vector Database：结合Text Embedding模型获取文档Embedding并存储（Milvus）
+- Schedule Core：调度核心，负责LLM、Vector Database等的交互调度（Langchain）
+- Prompt Control：面向开发、运维视角，不同问题分类，Prompt背景添加，保障回答的可控性、完备性
+- LLM：默认采用GPT-4，面向私有部署等隐私性场景，提供专有模型
+- Text Embedding：默认采用OpenAI Text Embedding模型，面向私有部署等隐私性场景，提供专有模型
+- SandBox：针对生成的结果，比如代码，用户不确定真假，提供环境交互验证（FaaS），支持修改
+- Connector：后续和周边平台通过API打通，比如监控等平台，方便交互以及操作（重启）
 <br>
 
 - [ ] Sandbox 环境
