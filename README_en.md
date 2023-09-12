@@ -101,6 +101,11 @@ git lfs clone https://huggingface.co/shibing624/text2vec-base-chinese
 
 - linux docker install
 Please feel free to search on Baidu or Google for relevant installation instructions.
+
+- mac docker install
+  - [Docker From Beginner to Practice](https://yeasy.gitbook.io/docker_practice/install/mac)
+
+  
 <br>
 
 - mac docker install
