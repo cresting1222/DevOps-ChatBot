@@ -22,7 +22,7 @@
 💡 本项目受[langchain-chatchat](https://github.com/chatchat-space/Langchain-Chatchat)项目和Code-Interpreter的启发，目标希望通过RAG、ToolLearning和环境隔离的沙盒来构建运维领域的对话机器人，让运维没有开发。
 
 
-🤖️ DevOps-ChatBot是一个开箱即用的应用，面向私有化部署等场景诉求，只需提供私人文档或者各种运维领域的开源问答知识，即可替代stackoverflow等运维问答网站，来改变人的问题排查习惯，逐渐从各种资料查询 -> 大模型问答。
+🤖️ DevOps-ChatBot是一个开箱即用的应用，面向私有化部署等场景诉求，只需提供私人文档或者各种运维领域的开源问答知识，即可替代stackoverflow等开发运维问答网站，来改变人的问题排查习惯，逐渐从各种资料查询 => 大模型问答。
 
 - 知识库管理，实现对话快速检索开源/私人技术文档
 - 代码抽取，提供正确可执行的代码示例
